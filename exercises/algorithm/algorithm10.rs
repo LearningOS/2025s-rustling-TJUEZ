@@ -1,6 +1,6 @@
 /*
-	graph
-	This problem requires you to implement a basic graph functio
+    graph
+    This problem requires you to implement a basic graph functio
 */
 // I AM NOT DONE
 
@@ -29,7 +29,18 @@ impl Graph for UndirectedGraph {
         &self.adjacency_table
     }
     fn add_edge(&mut self, edge: (&str, &str, i32)) {
-        //TODO
+        let (node_a, node_b, weight) = edge;
+
+        // Add nodes if they don't exist
+        self.add_node(node_a);
+        self.add_node(node_b);
+
+        // Add edge in both directions
+        let a_neighbors = self.adjacency_table_mutable().get_mut(node_a).unwrap();
+        a_neighbors.push((node_b.to_string(), weight));
+
+        let b_neighbors = self.adjacency_table_mutable().get_mut(node_b).unwrap();
+        b_neighbors.push((node_a.to_string(), weight));
     }
 }
 pub trait Graph {
@@ -37,11 +48,27 @@ pub trait Graph {
     fn adjacency_table_mutable(&mut self) -> &mut HashMap<String, Vec<(String, i32)>>;
     fn adjacency_table(&self) -> &HashMap<String, Vec<(String, i32)>>;
     fn add_node(&mut self, node: &str) -> bool {
-        //TODO
-		true
+        let node_str = node.to_string();
+        if self.adjacency_table().contains_key(&node_str) {
+            false
+        } else {
+            self.adjacency_table_mutable().insert(node_str, Vec::new());
+            true
+        }
     }
     fn add_edge(&mut self, edge: (&str, &str, i32)) {
-        //TODO
+        let (node_a, node_b, weight) = edge;
+
+        // Add nodes if they don't exist
+        self.add_node(node_a);
+        self.add_node(node_b);
+
+        // Add edge in both directions
+        let a_neighbors = self.adjacency_table_mutable().get_mut(node_a).unwrap();
+        a_neighbors.push((node_b.to_string(), weight));
+
+        let b_neighbors = self.adjacency_table_mutable().get_mut(node_b).unwrap();
+        b_neighbors.push((node_a.to_string(), weight));
     }
     fn contains(&self, node: &str) -> bool {
         self.adjacency_table().get(node).is_some()
